@@ -1,0 +1,16 @@
+{
+  "author": "Keijiro Takahashi",
+  "dependencies": {
+    "com.unity.modules.audio": "1.0.0",
+    "com.unity.modules.video": "1.0.0"
+  },
+  "description": "A small collection of utility scripts for testing.",
+  "displayName": "Test Tools",
+  "keywords": [ "unity" ],
+  "license": "Unlicense",
+  "name": "jp.keijiro.klak.testtools",
+  "repository": "github:keijiro/TestTools",
+  "unity": "2020.3",
+  "unityRelease": "0f1",
+  "version": "0.0.1"
+}

@@ -1,0 +1,16 @@
+{
+    "name": "Klak.TestTools.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:9054d6e0d0c694d44a0d05e070ae54f9"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
