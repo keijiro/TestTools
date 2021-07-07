@@ -22,7 +22,7 @@ public sealed class ImageSource : MonoBehaviour
 
     #region Video mode options
 
-    [SerializeField] VideoClip _sourceVideo = null;
+    [SerializeField] VideoClip _video = null;
     [SerializeField] string _videoUrl = null;
 
     #endregion

@@ -167,12 +167,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40ff2e515a81541cbb664860588e2c6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sourceType: 3
+  _sourceType: 2
   _texture: {fileID: 0}
   _textureUrl: 
-  _sourceVideo: {fileID: 0}
+  _video: {fileID: 0}
   _videoUrl: 
-  _webcamName: hoge2
+  _webcamName: 
   _webcamResolution: {x: 1920, y: 1080}
   _webcamFrameRate: 30
   _outputResolution: {x: 1920, y: 1080}

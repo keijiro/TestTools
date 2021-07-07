@@ -20,6 +20,8 @@ struct AutoProperty
 {
     SerializedProperty _prop;
 
+    public SerializedProperty Target => _prop;
+
     public AutoProperty(SerializedProperty prop)
       => _prop = prop;
 
