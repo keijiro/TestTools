@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.Video;
 
 namespace Klak.TestTools {
@@ -51,6 +52,7 @@ public sealed class ImageSource : MonoBehaviour
 
     #region Private members
 
+    UnityWebRequest _webTexture;
     WebCamTexture _webcam;
     RenderTexture _buffer;
 
@@ -58,14 +60,15 @@ public sealed class ImageSource : MonoBehaviour
     {
         if (source == null) return;
 
+        var dest = _outputTexture != null ? _outputTexture : _buffer;
+
         var aspect1 = (float)source.width / source.height;
-        var aspect2 = (float)_outputResolution.x / _outputResolution.y;
+        var aspect2 = (float)dest.width / dest.height;
         var gap = aspect2 / aspect1;
 
         var scale = new Vector2(gap, vflip ? -1 : 1);
         var offset = new Vector2((1 - gap) / 2, vflip ? 1 : 0);
 
-        var dest = _outputTexture != null ? _outputTexture : _buffer;
         Graphics.Blit(source, dest, scale, offset);
     }
 
@@ -79,7 +82,18 @@ public sealed class ImageSource : MonoBehaviour
             _buffer = new RenderTexture
               (_outputResolution.x, _outputResolution.y, 0);
 
-        if (_sourceType == SourceType.Texture) Blit(_texture);
+        if (_sourceType == SourceType.Texture)
+        {
+            if (_texture != null)
+            {
+                Blit(_texture);
+            }
+            else
+            {
+                _webTexture = UnityWebRequestTexture.GetTexture(_textureUrl);
+                _webTexture.SendWebRequest();
+            }
+        }
 
         if (_sourceType == SourceType.Video)
         {
@@ -115,6 +129,15 @@ public sealed class ImageSource : MonoBehaviour
 
         if (_sourceType == SourceType.Webcam && _webcam.didUpdateThisFrame)
             Blit(_webcam, _webcam.videoVerticallyMirrored);
+
+        if (_webTexture != null && _webTexture.isDone)
+        {
+            var texture = DownloadHandlerTexture.GetContent(_webTexture);
+            _webTexture.Dispose();
+            _webTexture = null;
+            Blit(texture);
+            Destroy(texture);
+        }
     }
 
     #endregion
