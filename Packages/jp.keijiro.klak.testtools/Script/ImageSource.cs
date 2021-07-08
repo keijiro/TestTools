@@ -37,33 +37,69 @@ public sealed class ImageSource : MonoBehaviour
 
     #region Output options
 
+    [SerializeField] RenderTexture _outputTexture = null;
     [SerializeField] Vector2Int _outputResolution = new Vector2Int(1920, 1080);
-
-    #endregion
-
-    #region Internal objects
-
-    WebCamTexture _webcam;
-    RenderTexture _buffer;
 
     #endregion
 
     #region Public properties
 
-    public Texture Texture => _buffer;
+    public Texture Texture
+      => _outputTexture != null ? _outputTexture : _buffer;
 
     #endregion
 
-    /*
+    #region Private members
+
+    WebCamTexture _webcam;
+    RenderTexture _buffer;
+
+    void Blit(Texture source, bool vflip = false)
+    {
+        if (source == null) return;
+
+        var aspect1 = (float)source.width / source.height;
+        var aspect2 = (float)_outputResolution.x / _outputResolution.y;
+        var gap = aspect2 / aspect1;
+
+        var scale = new Vector2(gap, vflip ? -1 : 1);
+        var offset = new Vector2((1 - gap) / 2, vflip ? 1 : 0);
+
+        var dest = _outputTexture != null ? _outputTexture : _buffer;
+        Graphics.Blit(source, dest, scale, offset);
+    }
+
+    #endregion
+
     #region MonoBehaviour implementation
 
     void Start()
     {
-        if (_dummyImage != null) return;
-        _webcam = new WebCamTexture
-          (_deviceName, _captureSize.x, _captureSize.y, _frameRate);
-        _buffer = new RenderTexture(_cropSize.x, _cropSize.y, 0);
-        _webcam.Play();
+        if (_outputTexture == null)
+            _buffer = new RenderTexture
+              (_outputResolution.x, _outputResolution.y, 0);
+
+        if (_sourceType == SourceType.Texture) Blit(_texture);
+
+        if (_sourceType == SourceType.Video)
+        {
+            var player = gameObject.AddComponent<VideoPlayer>();
+            player.source =
+              _video != null ? VideoSource.VideoClip : VideoSource.Url;
+            player.clip = _video;
+            player.url = _videoUrl;
+            player.isLooping = true;
+            player.renderMode = VideoRenderMode.APIOnly;
+            player.Play();
+        }
+
+        if (_sourceType == SourceType.Webcam)
+        {
+            _webcam = new WebCamTexture
+              (_webcamName,
+               _webcamResolution.x, _webcamResolution.y, _webcamFrameRate);
+            _webcam.Play();
+        }
     }
 
     void OnDestroy()
@@ -74,22 +110,14 @@ public sealed class ImageSource : MonoBehaviour
 
     void Update()
     {
-        if (_dummyImage != null) return;
-        if (!_webcam.didUpdateThisFrame) return;
+        if (_sourceType == SourceType.Video)
+            Blit(GetComponent<VideoPlayer>().texture);
 
-        var aspect1 = (float)_webcam.width / _webcam.height;
-        var aspect2 = (float)_cropSize.x / _cropSize.y;
-        var gap = aspect2 / aspect1;
-
-        var vflip = _webcam.videoVerticallyMirrored;
-        var scale = new Vector2(gap, vflip ? -1 : 1);
-        var offset = new Vector2((1 - gap) / 2, vflip ? 1 : 0);
-
-        Graphics.Blit(_webcam, _buffer, scale, offset);
+        if (_sourceType == SourceType.Webcam && _webcam.didUpdateThisFrame)
+            Blit(_webcam, _webcam.videoVerticallyMirrored);
     }
 
     #endregion
-    */
 }
 
 } // namespace Klak.TestTools

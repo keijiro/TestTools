@@ -28,6 +28,7 @@ sealed class ImageSourceEditor : Editor
     AutoProperty _webcamResolution;
     AutoProperty _webcamFrameRate;
 
+    AutoProperty _outputTexture;
     AutoProperty _outputResolution;
 
     void OnEnable() => AutoProperty.Scan(this);
@@ -53,6 +54,8 @@ sealed class ImageSourceEditor : Editor
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
+
+        EditorGUI.BeginDisabledGroup(Application.isPlaying);
 
         EditorGUILayout.PropertyField(_sourceType);
 
@@ -89,7 +92,11 @@ sealed class ImageSourceEditor : Editor
 
         EditorGUI.indentLevel--;
 
-        EditorGUILayout.PropertyField(_outputResolution);
+        EditorGUILayout.PropertyField(_outputTexture);
+        if (_outputTexture.Target.objectReferenceValue == null)
+            EditorGUILayout.PropertyField(_outputResolution);
+
+        EditorGUI.EndDisabledGroup();
 
         serializedObject.ApplyModifiedProperties();
     }
