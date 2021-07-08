@@ -8,7 +8,7 @@ public sealed class ImageSource : MonoBehaviour
 {
     #region Source type options
 
-    public enum SourceType { Texture, Video, Webcam, Card }
+    public enum SourceType { Texture, Video, Webcam, Card, Gradient }
 
     [SerializeField] SourceType _sourceType = SourceType.Card;
 
@@ -45,8 +45,14 @@ public sealed class ImageSource : MonoBehaviour
 
     #region Public properties
 
-    public Texture Texture
+    public RenderTexture Texture
       => _outputTexture != null ? _outputTexture : _buffer;
+
+    #endregion
+
+    #region Package asset reference
+
+    [SerializeField, HideInInspector] Shader _shader = null;
 
     #endregion
 
@@ -60,16 +66,14 @@ public sealed class ImageSource : MonoBehaviour
     {
         if (source == null) return;
 
-        var dest = _outputTexture != null ? _outputTexture : _buffer;
-
         var aspect1 = (float)source.width / source.height;
-        var aspect2 = (float)dest.width / dest.height;
+        var aspect2 = (float)Texture.width / Texture.height;
         var gap = aspect2 / aspect1;
 
         var scale = new Vector2(gap, vflip ? -1 : 1);
         var offset = new Vector2((1 - gap) / 2, vflip ? 1 : 0);
 
-        Graphics.Blit(source, dest, scale, offset);
+        Graphics.Blit(source, Texture, scale, offset);
     }
 
     #endregion
@@ -114,12 +118,30 @@ public sealed class ImageSource : MonoBehaviour
                _webcamResolution.x, _webcamResolution.y, _webcamFrameRate);
             _webcam.Play();
         }
+
+        if (_sourceType == SourceType.Card)
+        {
+            ShaderMaterial.SetVector("_Resolution", new Vector2(Texture.width, Texture.height));
+            Graphics.Blit(null, Texture, ShaderMaterial, 0);
+        }
+    }
+
+    Material _material;
+
+    Material ShaderMaterial => GetShaderMaterial();
+
+    Material GetShaderMaterial()
+    {
+        if (_material == null)
+            _material = new Material(_shader);
+        return _material;
     }
 
     void OnDestroy()
     {
         if (_webcam != null) Destroy(_webcam);
         if (_buffer != null) Destroy(_buffer);
+        if (_material != null) Destroy(_material);
     }
 
     void Update()
@@ -138,6 +160,9 @@ public sealed class ImageSource : MonoBehaviour
             Blit(texture);
             Destroy(texture);
         }
+
+        if (_sourceType == SourceType.Gradient)
+            Graphics.Blit(null, Texture, ShaderMaterial, 1);
     }
 
     #endregion

@@ -167,7 +167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40ff2e515a81541cbb664860588e2c6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sourceType: 0
+  _sourceType: 4
   _texture: {fileID: 0}
   _textureUrl: https://upload.wikimedia.org/wikipedia/commons/1/1c/Homme_de_vitruve.jpg
   _video: {fileID: 0}
@@ -177,6 +177,7 @@ MonoBehaviour:
   _webcamFrameRate: 30
   _outputTexture: {fileID: 8400000, guid: a5e2a14538434411bbcd9c4a94867bd9, type: 2}
   _outputResolution: {x: 1920, y: 1080}
+  _shader: {fileID: 4800000, guid: 3f7d8db4748f54c638a46cec0b0e61f8, type: 3}
 --- !u!1 &805087102
 GameObject:
   m_ObjectHideFlags: 0
