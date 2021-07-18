@@ -9,6 +9,7 @@ public sealed class ImageSource : MonoBehaviour
     #region Public property
 
     public Texture Texture => OutputBuffer;
+    public Vector2Int OutputResolution => _outputResolution;
 
     #endregion
 
