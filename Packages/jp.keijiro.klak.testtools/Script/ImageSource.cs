@@ -61,10 +61,12 @@ public sealed class ImageSource : MonoBehaviour
 
         var aspect1 = (float)source.width / source.height;
         var aspect2 = (float)OutputBuffer.width / OutputBuffer.height;
-        var gap = aspect2 / aspect1;
 
-        var scale = new Vector2(gap, vflip ? -1 : 1);
-        var offset = new Vector2((1 - gap) / 2, vflip ? 1 : 0);
+        var scale = new Vector2(aspect2 / aspect1, aspect1 / aspect2);
+        scale = Vector2.Min(Vector2.one, scale);
+        if (vflip) scale.y *= -1;
+
+        var offset = (Vector2.one - scale) / 2;
 
         Graphics.Blit(source, OutputBuffer, scale, offset);
     }
