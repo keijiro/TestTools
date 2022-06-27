@@ -29,14 +29,18 @@ Shader "Hidden/Klak/TestTools/ImageSource"
     float4 FragmentCard(float4 position : SV_Position,
                         float2 texCoord : TEXCOORD0) : SV_Target
     {
-        float scale = 27 / _Resolution.y;                 // Grid scale
-        float2 p0 = (texCoord - 0.5) * _Resolution.xy;    // Position (pixel)
-        float2 p1 = p0 * scale;                           // Position (half grid)
-        float2 p2 = p1 / 2 - 0.5;                         // Position (grid)
+        // Rotation (narrow screen) support
+        bool wide = _Resolution.x >= _Resolution.y;
+        float2 res = wide ? _Resolution.xy : _Resolution.yx;
+        float2 uv = wide ? texCoord.xy : texCoord.yx;
+
+        float scale = 27 / res.y;           // Grid scale
+        float2 p0 = (uv - 0.5) * res.xy;    // Position (pixel)
+        float2 p1 = p0 * scale;             // Position (half grid)
+        float2 p2 = p1 / 2 - 0.5;           // Position (grid)
 
         // Size of inner area
-        half aspect = _Resolution.y / _Resolution.x;
-        half2 area = half2(floor(6.5 * aspect) * 2 + 1, 13);
+        half2 area = half2(floor(6.5 * res.x / res.y) * 2 + 1, 13);
 
         // Crosshair and grid lines
         half2 ch = abs(p0);
