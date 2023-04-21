@@ -16,7 +16,7 @@ public sealed class ImageSource : MonoBehaviour
     #region Editable attributes
 
     // Source type options
-    public enum SourceType { Texture, Video, Webcam, Card, Gradient }
+    public enum SourceType { Texture, Video, Webcam, Card, Gradient, Camera }
     [SerializeField] SourceType _sourceType = SourceType.Card;
 
     // Texture mode options
@@ -31,6 +31,9 @@ public sealed class ImageSource : MonoBehaviour
     [SerializeField] string _webcamName = "";
     [SerializeField] Vector2Int _webcamResolution = new Vector2Int(1920, 1080);
     [SerializeField] int _webcamFrameRate = 30;
+
+    // Camera options
+    [SerializeField] Camera _camera = null;
 
     // Output options
     [SerializeField] RenderTexture _outputTexture = null;
@@ -162,6 +165,12 @@ public sealed class ImageSource : MonoBehaviour
 
         if (_sourceType == SourceType.Gradient)
             Graphics.Blit(null, OutputBuffer, _material, 1);
+
+        if (_sourceType == SourceType.Camera)
+        {
+            _camera.targetTexture = OutputBuffer;
+            if (!_camera.enabled) _camera.Render();
+        }
     }
 
     #endregion

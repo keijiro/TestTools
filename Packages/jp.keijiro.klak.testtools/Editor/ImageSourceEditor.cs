@@ -28,6 +28,8 @@ sealed class ImageSourceEditor : Editor
     AutoProperty _webcamResolution;
     AutoProperty _webcamFrameRate;
 
+    AutoProperty _camera;
+
     AutoProperty _outputTexture;
     AutoProperty _outputResolution;
 
@@ -89,6 +91,9 @@ sealed class ImageSourceEditor : Editor
             EditorGUILayout.PropertyField(_webcamResolution, Labels.Resolution);
             EditorGUILayout.PropertyField(_webcamFrameRate, Labels.FrameRate);
         }
+
+        if (type == ImageSource.SourceType.Camera)
+            EditorGUILayout.PropertyField(_camera);
 
         EditorGUI.indentLevel--;
 
