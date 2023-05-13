@@ -16,7 +16,9 @@ public sealed class ImageSource : MonoBehaviour
     #region Editable attributes
 
     // Source type options
-    public enum SourceType { Texture, Video, Webcam, Card, Gradient, Camera }
+    public enum SourceType
+      { Texture, Video, Webcam, Card, Gradient, Camera,
+        [InspectorName("NDI")] Ndi }
     [SerializeField] SourceType _sourceType = SourceType.Card;
 
     // Texture mode options
@@ -34,6 +36,11 @@ public sealed class ImageSource : MonoBehaviour
 
     // Camera options
     [SerializeField] Camera _camera = null;
+
+#if KLAK_NDI_AVAILABLE
+    // NDI options
+    [SerializeField] Klak.Ndi.NdiReceiver _ndiReceiver = null;
+#endif
 
     // Output options
     [SerializeField] RenderTexture _outputTexture = null;
@@ -171,6 +178,10 @@ public sealed class ImageSource : MonoBehaviour
             _camera.targetTexture = OutputBuffer;
             if (!_camera.enabled) _camera.Render();
         }
+
+#if KLAK_NDI_AVAILABLE
+        if (_sourceType == SourceType.Ndi) Blit(_ndiReceiver?.texture);
+#endif
     }
 
     #endregion

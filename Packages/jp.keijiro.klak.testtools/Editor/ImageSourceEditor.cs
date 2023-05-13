@@ -11,9 +11,13 @@ sealed class ImageSourceEditor : Editor
         public static Label Asset = "Asset";
         public static Label DeviceName = "Device Name";
         public static Label FrameRate = "Frame Rate";
+        public static Label NdiReceiver = "NDI Receiver";
         public static Label Resolution = "Resolution";
         public static Label Select = "Select";
         public static Label URL = "URL";
+        public const string NdiError =
+          "The NDI receiver component is not available. " +
+          "Import the KlakNDI package to use this feature.";
     }
 
     AutoProperty _sourceType;
@@ -29,6 +33,10 @@ sealed class ImageSourceEditor : Editor
     AutoProperty _webcamFrameRate;
 
     AutoProperty _camera;
+
+#if KLAK_NDI_AVAILABLE
+    AutoProperty _ndiReceiver;
+#endif
 
     AutoProperty _outputTexture;
     AutoProperty _outputResolution;
@@ -92,10 +100,20 @@ sealed class ImageSourceEditor : Editor
             EditorGUILayout.PropertyField(_webcamFrameRate, Labels.FrameRate);
         }
 
+#if KLAK_NDI_AVAILABLE
+        if (type == ImageSource.SourceType.Ndi)
+            EditorGUILayout.PropertyField(_ndiReceiver, Labels.NdiReceiver);
+#endif
+
         if (type == ImageSource.SourceType.Camera)
             EditorGUILayout.PropertyField(_camera);
 
         EditorGUI.indentLevel--;
+
+#if !KLAK_NDI_AVAILABLE
+        if (type == ImageSource.SourceType.Ndi)
+            EditorGUILayout.HelpBox(Labels.NdiError, MessageType.Error);
+#endif
 
         EditorGUILayout.PropertyField(_outputTexture);
         if (_outputTexture.Target.objectReferenceValue == null)

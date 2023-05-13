@@ -13,6 +13,12 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "jp.keijiro.klak.ndi",
+            "expression": "2.0.0",
+            "define": "KLAK_NDI_AVAILABLE"
+        }
+    ],
     "noEngineReferences": false
 }

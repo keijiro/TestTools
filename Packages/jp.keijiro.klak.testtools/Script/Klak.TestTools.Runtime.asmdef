@@ -1,3 +1,22 @@
 {
-	"name": "Klak.TestTools.Runtime"
+    "name": "Klak.TestTools.Runtime",
+    "rootNamespace": "",
+    "references": [
+        "GUID:b59f669f136310547b59ad72df53b42f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "jp.keijiro.klak.ndi",
+            "expression": "2.0.0",
+            "define": "KLAK_NDI_AVAILABLE"
+        }
+    ],
+    "noEngineReferences": false
 }
