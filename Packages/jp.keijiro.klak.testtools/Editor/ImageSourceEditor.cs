@@ -2,6 +2,7 @@ using UnityEditor;
 using UnityEngine;
 
 namespace Klak.TestTools {
+    /*
 
 [CustomEditor(typeof(ImageSource))]
 sealed class ImageSourceEditor : Editor
@@ -20,13 +21,13 @@ sealed class ImageSourceEditor : Editor
           "Import the KlakNDI package to use this feature.";
     }
 
-    AutoProperty _sourceType;
+    AutoProperty SourceType;
 
-    AutoProperty _texture;
-    AutoProperty _textureUrl;
+    AutoProperty SourceTexture;
+    AutoProperty SourceTextureUrl;
 
-    AutoProperty _video;
-    AutoProperty _videoUrl;
+    AutoProperty SourceVideo;
+    AutoProperty SourceVideoUrl;
 
     AutoProperty _webcamName;
     AutoProperty _webcamResolution;
@@ -38,8 +39,8 @@ sealed class ImageSourceEditor : Editor
     AutoProperty _ndiReceiver;
 #endif
 
-    AutoProperty _outputTexture;
-    AutoProperty _outputResolution;
+    AutoProperty OutputTexture;
+    AutoProperty OutputResolution;
 
     void OnEnable() => AutoProperty.Scan(this);
 
@@ -65,29 +66,27 @@ sealed class ImageSourceEditor : Editor
     {
         serializedObject.Update();
 
-        EditorGUI.BeginDisabledGroup(Application.isPlaying);
-
-        EditorGUILayout.PropertyField(_sourceType);
+        EditorGUILayout.PropertyField(SourceType);
 
         EditorGUI.indentLevel++;
 
-        var type = (ImageSource.SourceType)_sourceType.Target.enumValueIndex;
+        var type = (ImageSourceType)SourceType.Target.enumValueIndex;
 
-        if (type == ImageSource.SourceType.Texture)
+        if (type == ImageSourceType.Texture)
         {
-            EditorGUILayout.PropertyField(_texture, Labels.Asset);
-            if (_texture.Target.objectReferenceValue == null)
-                EditorGUILayout.PropertyField(_textureUrl, Labels.URL);
+            EditorGUILayout.PropertyField(SourceTexture, Labels.Asset);
+            if (SourceTexture.Target.objectReferenceValue == null)
+                EditorGUILayout.PropertyField(SourceTextureUrl, Labels.URL);
         }
 
-        if (type == ImageSource.SourceType.Video)
+        if (type == ImageSourceType.Video)
         {
-            EditorGUILayout.PropertyField(_video, Labels.Asset);
-            if (_video.Target.objectReferenceValue == null)
-                EditorGUILayout.PropertyField(_videoUrl, Labels.URL);
+            EditorGUILayout.PropertyField(SourceVideo, Labels.Asset);
+            if (SourceVideo.Target.objectReferenceValue == null)
+                EditorGUILayout.PropertyField(SourceVideoUrl, Labels.URL);
         }
 
-        if (type == ImageSource.SourceType.Webcam)
+        if (type == ImageSourceType.Webcam)
         {
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.PropertyField(_webcamName, Labels.DeviceName);
@@ -101,28 +100,27 @@ sealed class ImageSourceEditor : Editor
         }
 
 #if KLAK_NDI_AVAILABLE
-        if (type == ImageSource.SourceType.Ndi)
+        if (type == ImageSourceType.Ndi)
             EditorGUILayout.PropertyField(_ndiReceiver, Labels.NdiReceiver);
 #endif
 
-        if (type == ImageSource.SourceType.Camera)
+        if (type == ImageSourceType.Camera)
             EditorGUILayout.PropertyField(_camera);
 
         EditorGUI.indentLevel--;
 
 #if !KLAK_NDI_AVAILABLE
-        if (type == ImageSource.SourceType.Ndi)
+        if (type == ImageSourceType.Ndi)
             EditorGUILayout.HelpBox(Labels.NdiError, MessageType.Error);
 #endif
 
-        EditorGUILayout.PropertyField(_outputTexture);
-        if (_outputTexture.Target.objectReferenceValue == null)
-            EditorGUILayout.PropertyField(_outputResolution);
-
-        EditorGUI.EndDisabledGroup();
+        EditorGUILayout.PropertyField(OutputTexture);
+        if (OutputTexture.Target.objectReferenceValue == null)
+            EditorGUILayout.PropertyField(OutputResolution);
 
         serializedObject.ApplyModifiedProperties();
     }
 }
+*/
 
 } // namespace Klak.TestTools
