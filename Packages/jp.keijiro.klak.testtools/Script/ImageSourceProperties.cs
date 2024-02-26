@@ -4,7 +4,7 @@ using UnityEngine.Video;
 
 namespace Klak.TestTools {
 
-public sealed partial class ImageSource : MonoBehaviour
+partial class ImageSource
 {
     #region General properties
 
