@@ -106,10 +106,16 @@ public sealed partial class ImageSource : MonoBehaviour
             (SourceType == ImageSourceType.VideoUrl && IsSourceUrlGiven))
         {
             var player = gameObject.AddComponent<VideoPlayer>();
-            player.source = SourceType == ImageSourceType.Video ?
-                            VideoSource.VideoClip : VideoSource.Url;
-            player.clip = SourceVideo;
-            player.url = SourceUrl;
+            if (SourceType == ImageSourceType.Video)
+            {
+                player.source = VideoSource.VideoClip;
+                player.clip = SourceVideo;
+            }
+            else
+            {
+                player.source = VideoSource.Url;
+                player.url = SourceUrl;
+            }
             player.isLooping = true;
             player.renderMode = VideoRenderMode.APIOnly;
             player.Play();
