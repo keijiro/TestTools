@@ -8,14 +8,26 @@ partial class ImageSource
 {
     #region General properties
 
-    [field:SerializeField, FormerlySerializedAs("_sourceType")]
-    public ImageSourceType SourceType { get; set; } = ImageSourceType.Card;
+    [SerializeField]
+    ImageSourceType _sourceType = ImageSourceType.Card;
 
-    [field:SerializeField, FormerlySerializedAs("_outputResolution")]
-    public Vector2Int OutputResolution { get; set; } = new Vector2Int(1920, 1080);
+    public ImageSourceType SourceType
+      { get => _sourceType;
+        set { _sourceType = value; OnValidate(); } } 
 
-    [field:SerializeField, FormerlySerializedAs("_outputTexture")]
-    public RenderTexture OutputDestination { get; set; } = null;
+    [SerializeField]
+    Vector2Int _outputResolution = new Vector2Int(1920, 1080);
+
+    public Vector2Int OutputResolution
+      { get => _outputResolution;
+        set { _outputResolution = value; OnValidate(); } }
+
+    [SerializeField, FormerlySerializedAs("_outputTexture")]
+    RenderTexture _outputDestination = null;
+
+    public RenderTexture OutputDestination
+      { get => _outputDestination;
+        set { _outputDestination = value; OnValidate(); } }
 
     #endregion
 
@@ -24,8 +36,12 @@ partial class ImageSource
     [field:SerializeField, FormerlySerializedAs("_texture")]
     public Texture2D SourceTexture { get; set; } = null;
 
-    [field:SerializeField, FormerlySerializedAs("_video")]
-    public VideoClip SourceVideo { get; set; } = null;
+    [SerializeField, FormerlySerializedAs("_video")]
+    VideoClip _sourceVideo = null;
+
+    public VideoClip SourceVideo
+      { get => _sourceVideo;
+        set { _sourceVideo = value; OnValidate(); } }
 
     [field:SerializeField, FormerlySerializedAs("_camera")]
     public Camera SourceCamera { get; set; } = null;
@@ -39,17 +55,33 @@ partial class ImageSource
 
     #region Additional source information
 
-    [field:SerializeField, FormerlySerializedAs("_textureUrl")]
-    public string SourceUrl { get; set; } = null;
+    [SerializeField, FormerlySerializedAs("_textureUrl")]
+    string _sourceUrl = null;
 
-    [field:SerializeField, FormerlySerializedAs("_webcamName")]
-    public string DeviceName { get; set; } = "";
+    public string SourceUrl
+      { get => _sourceUrl;
+        set { _sourceUrl = value; OnValidate(); } }
 
-    [field:SerializeField, FormerlySerializedAs("_webcamResolution")]
-    public Vector2Int DeviceResolution { get; set; } = Vector2Int.zero;
+    [SerializeField, FormerlySerializedAs("_webcamName")]
+    string _deviceName = "";
 
-    [field:SerializeField, FormerlySerializedAs("_webcamFrameRate")]
-    public int DeviceFrameRate { get; set; } = 0;
+    public string DeviceName
+      { get => _deviceName;
+        set { _deviceName = value; OnValidate(); } }
+
+    [SerializeField, FormerlySerializedAs("_webcamResolution")]
+    Vector2Int _deviceResolution = Vector2Int.zero;
+
+    public Vector2Int DeviceResolution
+      { get => _deviceResolution;
+        set { _deviceResolution = value; OnValidate(); } }
+
+    [SerializeField, FormerlySerializedAs("_webcamFrameRate")]
+    int _deviceFrameRate = 0;
+
+    public int DeviceFrameRate
+      { get => _deviceFrameRate;
+        set { _deviceFrameRate = value; OnValidate(); } }
 
     #endregion
 

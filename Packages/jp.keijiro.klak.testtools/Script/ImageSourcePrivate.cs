@@ -90,10 +90,6 @@ partial class ImageSource
 
     void InitializeSource()
     {
-        // Texture source type
-        if (SourceType == ImageSourceType.Texture && SourceTexture != null)
-            BlitToOutput(SourceTexture);
-
         // Texture URL source type
         if (SourceType == ImageSourceType.TextureUrl && IsSourceUrlGiven)
         {
@@ -129,14 +125,14 @@ partial class ImageSource
             _webcam.Play();
         }
 
-        // Card source type
-        if (SourceType == ImageSourceType.Card)
-            BlitToOutputWithCardGenerator(new Vector2(OutputBuffer.width,
-                                                      OutputBuffer.height));
     }
 
     void UpdateSource()
     {
+        // Texture source type
+        if (SourceType == ImageSourceType.Texture && SourceTexture != null)
+            BlitToOutput(SourceTexture);
+
         if (SourceType == ImageSourceType.Video)
             BlitToOutput(GetComponent<VideoPlayer>().texture);
 
@@ -166,6 +162,11 @@ partial class ImageSource
         if (SourceType == ImageSourceType.Ndi)
             BlitToOutput(_ndiReceiver?.texture);
 #endif
+
+        // Card source type
+        if (SourceType == ImageSourceType.Card)
+            BlitToOutputWithCardGenerator(new Vector2(OutputBuffer.width,
+                                                      OutputBuffer.height));
     }
 
     #endregion

@@ -4,6 +4,10 @@ namespace Klak.TestTools {
 
 public sealed partial class ImageSource : MonoBehaviour
 {
+    void OnValidate()
+    {
+    }
+
     void Start()
       => InitializeSource();
 

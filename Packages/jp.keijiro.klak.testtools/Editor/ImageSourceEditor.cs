@@ -28,21 +28,21 @@ sealed class ImageSourceEditor : Editor
 
     #region AutoProperty set
 
-    AutoProperty SourceType;
-    AutoProperty OutputResolution;
-    AutoProperty OutputDestination;
+    AutoProperty _sourceType;
+    AutoProperty _outputResolution;
+    AutoProperty _outputDestination;
 
     AutoProperty SourceTexture;
-    AutoProperty SourceVideo;
+    AutoProperty _sourceVideo;
     AutoProperty SourceCamera;
 #if KLAK_NDI_AVAILABLE
     AutoProperty NdiReceiver;
 #endif
 
-    AutoProperty SourceUrl;
-    AutoProperty DeviceName;
-    AutoProperty DeviceResolution;
-    AutoProperty DeviceFrameRate;
+    AutoProperty _sourceUrl;
+    AutoProperty _deviceName;
+    AutoProperty _deviceResolution;
+    AutoProperty _deviceFrameRate;
 
     #endregion
 
@@ -51,7 +51,7 @@ sealed class ImageSourceEditor : Editor
     void ChangeWebcam(string name)
     {
         serializedObject.Update();
-        DeviceName.Target.stringValue = name;
+        _deviceName.Target.stringValue = name;
         serializedObject.ApplyModifiedProperties();
     }
 
@@ -74,17 +74,17 @@ sealed class ImageSourceEditor : Editor
     {
         serializedObject.Update();
 
-        EditorGUILayout.PropertyField(SourceType);
+        EditorGUILayout.PropertyField(_sourceType);
 
         EditorGUI.indentLevel++;
 
-        var type = (ImageSourceType)SourceType.Target.enumValueIndex;
+        var type = (ImageSourceType)_sourceType.Target.enumValueIndex;
 
         if (type == ImageSourceType.Texture)
             EditorGUILayout.PropertyField(SourceTexture, Labels.Asset);
 
         if (type == ImageSourceType.Video)
-            EditorGUILayout.PropertyField(SourceVideo, Labels.Asset);
+            EditorGUILayout.PropertyField(_sourceVideo, Labels.Asset);
 
         if (type == ImageSourceType.Camera)
             EditorGUILayout.PropertyField(SourceCamera, Labels.Camera);
@@ -96,19 +96,19 @@ sealed class ImageSourceEditor : Editor
 
         if (type == ImageSourceType.TextureUrl ||
             type == ImageSourceType.VideoUrl)
-            EditorGUILayout.PropertyField(SourceUrl, Labels.URL);
+            EditorGUILayout.PropertyField(_sourceUrl, Labels.URL);
 
         if (type == ImageSourceType.Webcam)
         {
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.PropertyField(DeviceName, Labels.DeviceName);
+            EditorGUILayout.PropertyField(_deviceName, Labels.DeviceName);
             var rect = EditorGUILayout.GetControlRect(false, GUILayout.Width(60));
             if (EditorGUI.DropdownButton(rect, Labels.Select, FocusType.Keyboard))
                 ShowDeviceSelector(rect);
             EditorGUILayout.EndHorizontal();
 
-            EditorGUILayout.PropertyField(DeviceResolution, Labels.Resolution);
-            EditorGUILayout.PropertyField(DeviceFrameRate, Labels.FrameRate);
+            EditorGUILayout.PropertyField(_deviceResolution, Labels.Resolution);
+            EditorGUILayout.PropertyField(_deviceFrameRate, Labels.FrameRate);
         }
 
         EditorGUI.indentLevel--;
@@ -118,9 +118,10 @@ sealed class ImageSourceEditor : Editor
             EditorGUILayout.HelpBox(Labels.NdiError, MessageType.Error);
 #endif
 
-        EditorGUILayout.PropertyField(OutputDestination, Labels.Destination);
-        if (OutputDestination.Target.objectReferenceValue == null)
-            EditorGUILayout.PropertyField(OutputResolution);
+        EditorGUILayout.PropertyField(_outputDestination, Labels.Destination);
+
+        if (_outputDestination.Target.objectReferenceValue == null)
+            EditorGUILayout.PropertyField(_outputResolution);
 
         serializedObject.ApplyModifiedProperties();
     }
