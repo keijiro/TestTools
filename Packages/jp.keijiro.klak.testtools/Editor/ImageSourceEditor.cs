@@ -96,7 +96,7 @@ sealed class ImageSourceEditor : Editor
 
         if (type == ImageSourceType.TextureUrl ||
             type == ImageSourceType.VideoUrl)
-            EditorGUILayout.PropertyField(_sourceUrl, Labels.URL);
+            EditorGUILayout.DelayedTextField(_sourceUrl, Labels.URL);
 
         if (type == ImageSourceType.Webcam)
         {
