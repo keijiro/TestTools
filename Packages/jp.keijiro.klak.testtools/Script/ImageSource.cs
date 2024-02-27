@@ -12,6 +12,7 @@ public sealed partial class ImageSource : MonoBehaviour
     {
         if (_initialized)
         {
+            DestroyIntermediateObjects();
             DestroyLazyObjects();
             _initialized = false;
         }

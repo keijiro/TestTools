@@ -14,91 +14,6 @@ partial class ImageSource
 
     #endregion
 
-    #region Private objects with lazy initialization
-
-    Material _generatorMaterial;
-    RenderTexture _internalOutputBuffer;
-    WebCamTexture _webcam;
-    VideoPlayer _videoPlayer;
-    UnityWebRequest _webTexture;
-
-    Material GeneratorMaterial =>
-      _generatorMaterial != null ? _generatorMaterial :
-        _generatorMaterial = new Material(_generatorShader);
-
-    RenderTexture InternalOutputBuffer =>
-      _internalOutputBuffer != null ? _internalOutputBuffer :
-        _internalOutputBuffer = new RenderTexture(OutputResolution.x,
-                                                  OutputResolution.y, 0);
- 
-    WebCamTexture Webcam =>
-      _webcam != null ? _webcam :
-        _webcam = new WebCamTexture(DeviceName, DeviceResolution.x,
-                                    DeviceResolution.y, DeviceFrameRate);
-
-    UnityWebRequest WebTexture =>
-      _webTexture != null ? _webTexture :
-        _webTexture = (IsSourceUrlGiven ? UnityWebRequestTexture.GetTexture(SourceUrl) : null);
-
-    VideoPlayer AttachedVideoPlayer =>
-      _videoPlayer != null ? _videoPlayer :
-        _videoPlayer = AttachVideoPlayer();
-
-    VideoPlayer AttachVideoPlayer()
-    {
-        if (SourceType == ImageSourceType.Video && SourceVideo != null)
-            return AttachVideoPlayer(SourceVideo, null);
-        if (SourceType == ImageSourceType.VideoUrl && IsSourceUrlGiven)
-            return AttachVideoPlayer(null, SourceUrl);
-        return null;
-    }
-
-    VideoPlayer AttachVideoPlayer(VideoClip clip, string url)
-    {
-        var player = gameObject.AddComponent<VideoPlayer>();
-        player.source = clip != null ? VideoSource.VideoClip : VideoSource.Url;
-        player.clip = clip;
-        player.url = url;
-        player.isLooping = true;
-        player.renderMode = VideoRenderMode.APIOnly;
-        return player;
-    }
-
-    void DestroyLazyObjects()
-    {
-        if (_generatorMaterial != null)
-        {
-            Destroy(_generatorMaterial);
-            _generatorMaterial = null;
-        }
-
-        if (_internalOutputBuffer != null)
-        {
-            Destroy(_internalOutputBuffer);
-            _internalOutputBuffer = null;
-        }
-
-        if (_webcam != null)
-        {
-            Destroy(_webcam);
-            _webcam = null;
-        }
-
-        if (_videoPlayer != null)
-        {
-            Destroy(_videoPlayer);
-            _videoPlayer = null;
-        }
-
-        if (_webTexture != null)
-        {
-            _webTexture.Dispose();
-            _webTexture = null;
-        }
-    }
-
-    #endregion
-
     #region Private helper property
 
     bool IsSourceUrlGiven => !string.IsNullOrEmpty(SourceUrl);
@@ -137,17 +52,115 @@ partial class ImageSource
 
     #endregion
 
+    #region Common objects with lazy initialization
+
+    Material _generatorMaterial;
+    RenderTexture _internalOutputBuffer;
+
+    Material GeneratorMaterial =>
+      _generatorMaterial != null ? _generatorMaterial :
+        _generatorMaterial = new Material(_generatorShader);
+
+    RenderTexture InternalOutputBuffer =>
+      _internalOutputBuffer != null ? _internalOutputBuffer :
+        _internalOutputBuffer = new RenderTexture(OutputResolution.x,
+                                                  OutputResolution.y, 0);
+
+    void DestroyLazyObjects()
+    {
+        if (_generatorMaterial != null)
+        {
+            Destroy(_generatorMaterial);
+            _generatorMaterial = null;
+        }
+
+        if (_internalOutputBuffer != null)
+        {
+            Destroy(_internalOutputBuffer);
+            _internalOutputBuffer = null;
+        }
+    }
+
+    #endregion
+
+    #region Per-source intermediate objects
+
+    // Webcam source
+    WebCamTexture _webcam;
+
+    WebCamTexture InitWebcam()
+      => _webcam = new WebCamTexture(DeviceName, DeviceResolution.x,
+                                     DeviceResolution.y, DeviceFrameRate);
+
+    // Video source
+    VideoPlayer _videoPlayer;
+
+    VideoPlayer AttachVideoPlayer(VideoClip clip, string url)
+    {
+        if (clip == null && string.IsNullOrEmpty(url)) return null;
+        _videoPlayer = gameObject.AddComponent<VideoPlayer>();
+        _videoPlayer.source = clip != null ? VideoSource.VideoClip : VideoSource.Url;
+        _videoPlayer.clip = clip;
+        _videoPlayer.url = url;
+        _videoPlayer.isLooping = true;
+        _videoPlayer.renderMode = VideoRenderMode.APIOnly;
+        return _videoPlayer;
+    }
+
+    // Web texture (image from URL)
+    UnityWebRequest _webTexture;
+
+    UnityWebRequest RequestWebTexture()
+    {
+        if (string.IsNullOrEmpty(SourceUrl)) return null;
+        _webTexture = UnityWebRequestTexture.GetTexture(SourceUrl);
+        return _webTexture;
+    }
+
+    void BlitAndDestroyWebTexture()
+    {
+        var texture = DownloadHandlerTexture.GetContent(_webTexture);
+        _webTexture.Dispose();
+        _webTexture = null;
+        BlitToOutput(texture);
+        Destroy(texture);
+    }
+
+    // Common finalizer
+    void DestroyIntermediateObjects()
+    {
+        if (_webcam != null)
+        {
+            Destroy(_webcam);
+            _webcam = null;
+        }
+
+        if (_videoPlayer != null)
+        {
+            Destroy(_videoPlayer);
+            _videoPlayer = null;
+        }
+
+        if (_webTexture != null)
+        {
+            _webTexture.Dispose();
+            _webTexture = null;
+        }
+    }
+
+    #endregion
+
     #region Source accessors
 
     void InitializeSource()
     {
         // Video source initialization
         if (SourceType == ImageSourceType.Video)
-            AttachedVideoPlayer?.Play();
+            AttachVideoPlayer(SourceVideo, null)?.Play();
 
         // Webcam source initialization
         if (SourceType == ImageSourceType.Webcam)
-            Webcam.Play();
+            InitWebcam()?.Play();
 
         // Card source initialization
         if (SourceType == ImageSourceType.Card)
@@ -156,11 +169,11 @@ partial class ImageSource
 
         // Texture URL source type
         if (SourceType == ImageSourceType.TextureUrl && IsSourceUrlGiven)
-            WebTexture.SendWebRequest();
+            RequestWebTexture().SendWebRequest();
 
         // Video (URL) source initialization
         if (SourceType == ImageSourceType.VideoUrl)
-            AttachedVideoPlayer?.Play();
+            AttachVideoPlayer(null, SourceUrl)?.Play();
     }
 
     void UpdateSource()
@@ -174,7 +187,7 @@ partial class ImageSource
             BlitToOutput(_videoPlayer.texture);
 
         // Webcam source update
-        if (SourceType == ImageSourceType.Webcam && _webcam.didUpdateThisFrame)
+        if (_webcam != null && _webcam.didUpdateThisFrame)
             BlitToOutput(_webcam, _webcam.videoVerticallyMirrored);
 
         // Gradient source update
@@ -182,10 +195,11 @@ partial class ImageSource
             BlitToOutputWithGradientGenerator();
 
         // Camera source update
-        if (SourceType == ImageSourceType.Camera)
+        if (SourceType == ImageSourceType.Camera &&
+            SourceCamera != null && !SourceCamera.enabled)
         {
             SourceCamera.targetTexture = OutputBuffer;
-            if (!SourceCamera.enabled) SourceCamera.Render();
+            SourceCamera.Render();
         }
 
 #if KLAK_NDI_AVAILABLE
@@ -196,13 +210,7 @@ partial class ImageSource
 
         // Texture (URL) update
         if (_webTexture != null && _webTexture.isDone)
-        {
-            var texture = DownloadHandlerTexture.GetContent(_webTexture);
-            _webTexture.Dispose();
-            _webTexture = null;
-            BlitToOutput(texture);
-            Destroy(texture);
-        }
+            BlitAndDestroyWebTexture();
     }
 
     #endregion
