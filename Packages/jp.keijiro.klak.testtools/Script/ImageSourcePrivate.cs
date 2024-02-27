@@ -19,6 +19,8 @@ partial class ImageSource
     Material _generatorMaterial;
     RenderTexture _internalOutputBuffer;
     WebCamTexture _webcam;
+    VideoPlayer _videoPlayer;
+    UnityWebRequest _webTexture;
 
     Material GeneratorMaterial =>
       _generatorMaterial != null ? _generatorMaterial :
@@ -33,6 +35,34 @@ partial class ImageSource
       _webcam != null ? _webcam :
         _webcam = new WebCamTexture(DeviceName, DeviceResolution.x,
                                     DeviceResolution.y, DeviceFrameRate);
+
+    UnityWebRequest WebTexture =>
+      _webTexture != null ? _webTexture :
+        _webTexture = (IsSourceUrlGiven ? UnityWebRequestTexture.GetTexture(SourceUrl) : null);
+
+    VideoPlayer AttachedVideoPlayer =>
+      _videoPlayer != null ? _videoPlayer :
+        _videoPlayer = AttachVideoPlayer();
+
+    VideoPlayer AttachVideoPlayer()
+    {
+        if (SourceType == ImageSourceType.Video && SourceVideo != null)
+            return AttachVideoPlayer(SourceVideo, null);
+        if (SourceType == ImageSourceType.VideoUrl && IsSourceUrlGiven)
+            return AttachVideoPlayer(null, SourceUrl);
+        return null;
+    }
+
+    VideoPlayer AttachVideoPlayer(VideoClip clip, string url)
+    {
+        var player = gameObject.AddComponent<VideoPlayer>();
+        player.source = clip != null ? VideoSource.VideoClip : VideoSource.Url;
+        player.clip = clip;
+        player.url = url;
+        player.isLooping = true;
+        player.renderMode = VideoRenderMode.APIOnly;
+        return player;
+    }
 
     void DestroyLazyObjects()
     {
@@ -52,6 +82,18 @@ partial class ImageSource
         {
             Destroy(_webcam);
             _webcam = null;
+        }
+
+        if (_videoPlayer != null)
+        {
+            Destroy(_videoPlayer);
+            _videoPlayer = null;
+        }
+
+        if (_webTexture != null)
+        {
+            _webTexture.Dispose();
+            _webTexture = null;
         }
     }
 
@@ -97,20 +139,11 @@ partial class ImageSource
 
     #region Source accessors
 
-    UnityWebRequest _webTexture;
-
     void InitializeSource()
     {
         // Video source initialization
-        if (SourceType == ImageSourceType.Video && SourceVideo != null)
-        {
-            var player = gameObject.AddComponent<VideoPlayer>();
-            player.source = VideoSource.VideoClip;
-            player.clip = SourceVideo;
-            player.isLooping = true;
-            player.renderMode = VideoRenderMode.APIOnly;
-            player.Play();
-        }
+        if (SourceType == ImageSourceType.Video)
+            AttachedVideoPlayer?.Play();
 
         // Webcam source initialization
         if (SourceType == ImageSourceType.Webcam)
@@ -123,32 +156,22 @@ partial class ImageSource
 
         // Texture URL source type
         if (SourceType == ImageSourceType.TextureUrl && IsSourceUrlGiven)
-        {
-            _webTexture = UnityWebRequestTexture.GetTexture(SourceUrl);
-            _webTexture.SendWebRequest();
-        }
+            WebTexture.SendWebRequest();
 
         // Video (URL) source initialization
-        if (SourceType == ImageSourceType.VideoUrl && IsSourceUrlGiven)
-        {
-            var player = gameObject.AddComponent<VideoPlayer>();
-            player.source = VideoSource.Url;
-            player.url = SourceUrl;
-            player.isLooping = true;
-            player.renderMode = VideoRenderMode.APIOnly;
-            player.Play();
-        }
+        if (SourceType == ImageSourceType.VideoUrl)
+            AttachedVideoPlayer?.Play();
     }
 
     void UpdateSource()
     {
         // Texture source update
-        if (SourceType == ImageSourceType.Texture && SourceTexture != null)
+        if (SourceType == ImageSourceType.Texture)
             BlitToOutput(SourceTexture);
 
         // Video source update (including Video URL source)
-        if (SourceType == ImageSourceType.Video || SourceType == ImageSourceType.VideoUrl)
-            BlitToOutput(GetComponent<VideoPlayer>().texture);
+        if (_videoPlayer != null)
+            BlitToOutput(_videoPlayer.texture);
 
         // Webcam source update
         if (SourceType == ImageSourceType.Webcam && _webcam.didUpdateThisFrame)
