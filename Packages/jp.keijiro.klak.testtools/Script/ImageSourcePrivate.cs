@@ -18,6 +18,7 @@ partial class ImageSource
 
     Material _generatorMaterial;
     RenderTexture _internalOutputBuffer;
+    WebCamTexture _webcam;
 
     Material GeneratorMaterial =>
       _generatorMaterial != null ? _generatorMaterial :
@@ -27,6 +28,11 @@ partial class ImageSource
       _internalOutputBuffer != null ? _internalOutputBuffer :
         _internalOutputBuffer = new RenderTexture(OutputResolution.x,
                                                   OutputResolution.y, 0);
+ 
+    WebCamTexture Webcam =>
+      _webcam != null ? _webcam :
+        _webcam = new WebCamTexture(DeviceName, DeviceResolution.x,
+                                    DeviceResolution.y, DeviceFrameRate);
 
     void DestroyLazyObjects()
     {
@@ -40,6 +46,12 @@ partial class ImageSource
         {
             Destroy(_internalOutputBuffer);
             _internalOutputBuffer = null;
+        }
+
+        if (_webcam != null)
+        {
+            Destroy(_webcam);
+            _webcam = null;
         }
     }
 
@@ -83,13 +95,32 @@ partial class ImageSource
 
     #endregion
 
-    #region Private members
+    #region Source accessors
 
     UnityWebRequest _webTexture;
-    WebCamTexture _webcam;
 
     void InitializeSource()
     {
+        // Video source initialization
+        if (SourceType == ImageSourceType.Video && SourceVideo != null)
+        {
+            var player = gameObject.AddComponent<VideoPlayer>();
+            player.source = VideoSource.VideoClip;
+            player.clip = SourceVideo;
+            player.isLooping = true;
+            player.renderMode = VideoRenderMode.APIOnly;
+            player.Play();
+        }
+
+        // Webcam source initialization
+        if (SourceType == ImageSourceType.Webcam)
+            Webcam.Play();
+
+        // Card source initialization
+        if (SourceType == ImageSourceType.Card)
+            BlitToOutputWithCardGenerator(new Vector2(OutputBuffer.width,
+                                                      OutputBuffer.height));
+
         // Texture URL source type
         if (SourceType == ImageSourceType.TextureUrl && IsSourceUrlGiven)
         {
@@ -97,49 +128,50 @@ partial class ImageSource
             _webTexture.SendWebRequest();
         }
 
-        // Video source type
-        if ((SourceType == ImageSourceType.Video && SourceVideo != null) ||
-            (SourceType == ImageSourceType.VideoUrl && IsSourceUrlGiven))
+        // Video (URL) source initialization
+        if (SourceType == ImageSourceType.VideoUrl && IsSourceUrlGiven)
         {
             var player = gameObject.AddComponent<VideoPlayer>();
-            if (SourceType == ImageSourceType.Video)
-            {
-                player.source = VideoSource.VideoClip;
-                player.clip = SourceVideo;
-            }
-            else
-            {
-                player.source = VideoSource.Url;
-                player.url = SourceUrl;
-            }
+            player.source = VideoSource.Url;
+            player.url = SourceUrl;
             player.isLooping = true;
             player.renderMode = VideoRenderMode.APIOnly;
             player.Play();
         }
-
-        // Webcam source type
-        if (SourceType == ImageSourceType.Webcam)
-        {
-            _webcam = new WebCamTexture(DeviceName, DeviceResolution.x,
-                                        DeviceResolution.y, DeviceFrameRate);
-            _webcam.Play();
-        }
-
     }
 
     void UpdateSource()
     {
-        // Texture source type
+        // Texture source update
         if (SourceType == ImageSourceType.Texture && SourceTexture != null)
             BlitToOutput(SourceTexture);
 
-        if (SourceType == ImageSourceType.Video)
+        // Video source update (including Video URL source)
+        if (SourceType == ImageSourceType.Video || SourceType == ImageSourceType.VideoUrl)
             BlitToOutput(GetComponent<VideoPlayer>().texture);
 
+        // Webcam source update
         if (SourceType == ImageSourceType.Webcam && _webcam.didUpdateThisFrame)
             BlitToOutput(_webcam, _webcam.videoVerticallyMirrored);
 
-        // Asynchronous image downloading
+        // Gradient source update
+        if (SourceType == ImageSourceType.Gradient)
+            BlitToOutputWithGradientGenerator();
+
+        // Camera source update
+        if (SourceType == ImageSourceType.Camera)
+        {
+            SourceCamera.targetTexture = OutputBuffer;
+            if (!SourceCamera.enabled) SourceCamera.Render();
+        }
+
+#if KLAK_NDI_AVAILABLE
+        // NDI source update
+        if (SourceType == ImageSourceType.Ndi)
+            BlitToOutput(_ndiReceiver?.texture);
+#endif
+
+        // Texture (URL) update
         if (_webTexture != null && _webTexture.isDone)
         {
             var texture = DownloadHandlerTexture.GetContent(_webTexture);
@@ -148,25 +180,6 @@ partial class ImageSource
             BlitToOutput(texture);
             Destroy(texture);
         }
-
-        if (SourceType == ImageSourceType.Gradient)
-            BlitToOutputWithGradientGenerator();
-
-        if (SourceType == ImageSourceType.Camera)
-        {
-            SourceCamera.targetTexture = OutputBuffer;
-            if (!SourceCamera.enabled) SourceCamera.Render();
-        }
-
-#if KLAK_NDI_AVAILABLE
-        if (SourceType == ImageSourceType.Ndi)
-            BlitToOutput(_ndiReceiver?.texture);
-#endif
-
-        // Card source type
-        if (SourceType == ImageSourceType.Card)
-            BlitToOutputWithCardGenerator(new Vector2(OutputBuffer.width,
-                                                      OutputBuffer.height));
     }
 
     #endregion

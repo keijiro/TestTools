@@ -4,26 +4,28 @@ namespace Klak.TestTools {
 
 public sealed partial class ImageSource : MonoBehaviour
 {
-    void OnValidate()
-    {
-    }
+    bool _initialized;
 
-    void Start()
-      => InitializeSource();
+    void OnValidate() => OnDestroy();
 
     void OnDestroy()
     {
-        if (_webcam != null)
+        if (_initialized)
         {
-            Destroy(_webcam);
-            _webcam = null;
+            DestroyLazyObjects();
+            _initialized = false;
         }
-
-        DestroyLazyObjects();
     }
 
     void Update()
-        => UpdateSource();
+    {
+        if (!_initialized)
+        {
+            InitializeSource();
+            _initialized = true;
+        }
+        UpdateSource();
+    }
 }
 
 } // namespace Klak.TestTools
