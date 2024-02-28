@@ -1,3 +1,10 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <GallantGames.UI.AspectRatioPanel aspect-ratio-x="10" aspect-ratio-y="10" style="background-image: url(&quot;project://database/Assets/Test/Buffer.renderTexture?fileID=8400000&amp;guid=a5e2a14538434411bbcd9c4a94867bd9&amp;type=2#Buffer&quot;);" />
+    <ui:DropdownField label="Source" index="-1" choices="System.Collections.Generic.List`1[System.String]" name="Selector">
+        <Bindings>
+            <ui:DataBinding property="choices" data-source-path="SourceList" binding-mode="ToTarget" />
+        </Bindings>
+    </ui:DropdownField>
+    <ui:VisualElement style="flex-grow: 1;">
+        <GallantGames.UI.AspectRatioPanel aspect-ratio-x="10" aspect-ratio-y="10" style="background-image: url(&quot;project://database/Assets/Test/Buffer.renderTexture?fileID=8400000&amp;guid=a5e2a14538434411bbcd9c4a94867bd9&amp;type=2#Buffer&quot;); top: 66px; right: 128px;" />
+    </ui:VisualElement>
 </ui:UXML>
