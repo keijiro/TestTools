@@ -205,7 +205,7 @@ partial class ImageSource
 #if KLAK_NDI_AVAILABLE
         // NDI source update
         if (SourceType == ImageSourceType.Ndi)
-            BlitToOutput(_ndiReceiver?.texture);
+            BlitToOutput(NdiReceiver?.texture);
 #endif
 
         // Texture (URL) update

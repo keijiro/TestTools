@@ -47,7 +47,7 @@ partial class ImageSource
     public Camera SourceCamera { get; set; } = null;
 
 #if KLAK_NDI_AVAILABLE
-    [SerializeField, FormerlySerializedAs("_ndiReceiver")]
+    [field:SerializeField, FormerlySerializedAs("_ndiReceiver")]
     public Klak.Ndi.NdiReceiver NdiReceiver { get; set; } = null;
 #endif
 
