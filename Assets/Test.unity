@@ -222,6 +222,7 @@ GameObject:
   m_Component:
   - component: {fileID: 755876061}
   - component: {fileID: 755876062}
+  - component: {fileID: 755876063}
   m_Layer: 0
   m_Name: Test
   m_TagString: Untagged
@@ -267,6 +268,19 @@ MonoBehaviour:
   _deviceName: 
   _deviceResolution: {x: 1920, y: 1080}
   _deviceFrameRate: 30
+--- !u!114 &755876063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 755876059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31e4b60789ac448eeb715410e64e5d5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <TargetUI>k__BackingField: {fileID: 1160323001}
 --- !u!1 &889026468
 GameObject:
   m_ObjectHideFlags: 0
@@ -530,7 +544,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1160323002}
   - component: {fileID: 1160323001}
-  - component: {fileID: 1160323003}
   m_Layer: 5
   m_Name: UIDocument
   m_TagString: Untagged
@@ -569,22 +582,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1160323003
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1160323000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31e4b60789ac448eeb715410e64e5d5f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <SourceList>k__BackingField:
-  - 1
-  - b
-  - c
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

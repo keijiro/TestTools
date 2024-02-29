@@ -1,5 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <ui:DropdownField label="Source" index="-1" choices="System.Collections.Generic.List`1[System.String]" name="Selector">
+    <ui:DropdownField label="Source" index="-1" choices="No source available" name="Selector">
         <Bindings>
             <ui:DataBinding property="choices" data-source-path="SourceList" binding-mode="ToTarget" />
         </Bindings>
