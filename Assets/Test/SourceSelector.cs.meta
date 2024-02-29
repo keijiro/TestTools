@@ -3,7 +3,9 @@ guid: 31e4b60789ac448eeb715410e64e5d5f
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - <TargetUI>k__BackingField: {instanceID: 0}
+  - _ndiResources: {fileID: 11400000, guid: 69304b86950074db7ba8caba75214004, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

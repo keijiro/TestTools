@@ -264,6 +264,7 @@ MonoBehaviour:
   <SourceTexture>k__BackingField: {fileID: 0}
   _sourceVideo: {fileID: 0}
   <SourceCamera>k__BackingField: {fileID: 1100264432}
+  <NdiReceiver>k__BackingField: {fileID: 0}
   _sourceUrl: https://upload.wikimedia.org/wikipedia/commons/1/1c/Homme_de_vitruve.jpg
   _deviceName: 
   _deviceResolution: {x: 1920, y: 1080}
@@ -281,6 +282,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <TargetUI>k__BackingField: {fileID: 1160323001}
+  _ndiResources: {fileID: 11400000, guid: 69304b86950074db7ba8caba75214004, type: 2}
 --- !u!1 &889026468
 GameObject:
   m_ObjectHideFlags: 0
