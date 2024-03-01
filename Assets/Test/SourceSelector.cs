@@ -69,7 +69,7 @@ public sealed class SourceSelector : MonoBehaviour
 
     #region MonoBehaviour implementation
 
-    async Awaitable Start()
+    void Start()
     {
         // UI root: Make it clickable and set this as a data source.
         var root = TargetUI.rootVisualElement;
@@ -80,9 +80,6 @@ public sealed class SourceSelector : MonoBehaviour
         var list = root.Q<DropdownField>("SourceDropdown");
         list.RegisterValueChangedCallback(evt => SelectSource(evt.newValue));
         list.RegisterCallback<FocusEvent>(_ => UpdateOptions());
-
-        // Webcam access request
-        await Application.RequestUserAuthorization(UserAuthorization.WebCam);
     }
 
     #endregion

@@ -89,8 +89,12 @@ partial class ImageSource
     WebCamTexture _webcam;
 
     WebCamTexture InitWebcam()
-      => _webcam = new WebCamTexture(DeviceName, DeviceResolution.x,
-                                     DeviceResolution.y, DeviceFrameRate);
+    {
+        Application.RequestUserAuthorization(UserAuthorization.WebCam);
+        _webcam = new WebCamTexture(DeviceName, DeviceResolution.x,
+                                    DeviceResolution.y, DeviceFrameRate);
+        return _webcam;
+    }
 
     // Video source
     VideoPlayer _videoPlayer;
