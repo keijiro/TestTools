@@ -32,7 +32,7 @@ public sealed class SourceSelector : MonoBehaviour
     #region UI methods
 
     void ToggleUI()
-      => TargetUI.rootVisualElement.Q("Selector").visible ^= true;
+      => TargetUI.rootVisualElement.Q("SourceSelector").visible ^= true;
 
     void UpdateOptions()
       => SourceList =
@@ -77,10 +77,9 @@ public sealed class SourceSelector : MonoBehaviour
         root.dataSource = this;
 
         // Dropdown selector: Hook the callbacks up and intially hide the UI.
-        var list = root.Q<DropdownField>("Selector");
+        var list = root.Q<DropdownField>("SourceDropdown");
         list.RegisterValueChangedCallback(evt => SelectSource(evt.newValue));
         list.RegisterCallback<FocusEvent>(_ => UpdateOptions());
-        list.visible = false;
 
         // Webcam access request
         await Application.RequestUserAuthorization(UserAuthorization.WebCam);
