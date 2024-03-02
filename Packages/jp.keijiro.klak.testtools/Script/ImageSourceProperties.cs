@@ -46,11 +46,6 @@ partial class ImageSource
     [field:SerializeField, FormerlySerializedAs("_camera")]
     public Camera SourceCamera { get; set; } = null;
 
-#if KLAK_NDI_AVAILABLE
-    [field:SerializeField, FormerlySerializedAs("_ndiReceiver")]
-    public Klak.Ndi.NdiReceiver NdiReceiver { get; set; } = null;
-#endif
-
     #endregion
 
     #region Additional source information
@@ -63,11 +58,11 @@ partial class ImageSource
         set { _sourceUrl = value; OnValidate(); } }
 
     [SerializeField, FormerlySerializedAs("_webcamName")]
-    string _deviceName = "";
+    string _sourceName = "";
 
-    public string DeviceName
-      { get => _deviceName;
-        set { _deviceName = value; OnValidate(); } }
+    public string SourceName
+      { get => _sourceName;
+        set { _sourceName = value; OnValidate(); } }
 
     [SerializeField, FormerlySerializedAs("_webcamResolution")]
     Vector2Int _deviceResolution = Vector2Int.zero;

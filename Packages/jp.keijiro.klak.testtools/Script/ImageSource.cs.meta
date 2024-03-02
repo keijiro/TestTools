@@ -5,11 +5,11 @@ MonoImporter:
   serializedVersion: 2
   defaultReferences:
   - _generatorShader: {fileID: 4800000, guid: 3f7d8db4748f54c638a46cec0b0e61f8, type: 3}
+  - _ndiResources: {fileID: 11400000, guid: 69304b86950074db7ba8caba75214004, type: 2}
   - _outputDestination: {instanceID: 0}
   - <SourceTexture>k__BackingField: {instanceID: 0}
   - _sourceVideo: {instanceID: 0}
   - <SourceCamera>k__BackingField: {instanceID: 0}
-  - <NdiReceiver>k__BackingField: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

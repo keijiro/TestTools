@@ -1,10 +1,10 @@
-using UnityEngine;
-using UnityEngine.UIElements;
-using Unity.Properties;
-using System.Linq;
-using System.Collections.Generic;
-using Klak.TestTools;
 using Klak.Ndi;
+using Klak.TestTools;
+using System.Collections.Generic;
+using System.Linq;
+using Unity.Properties;
+using UnityEngine.UIElements;
+using UnityEngine;
 
 public sealed class SourceSelector : MonoBehaviour
 {
@@ -22,13 +22,6 @@ public sealed class SourceSelector : MonoBehaviour
 
     #endregion
 
-    #region Project asset reference
-
-    [SerializeField, HideInInspector]
-    NdiResources _ndiResources;
-
-    #endregion
-
     #region UI methods
 
     void ToggleUI()
@@ -43,26 +36,9 @@ public sealed class SourceSelector : MonoBehaviour
     void SelectSource(string name)
     {
         var source = GetComponent<ImageSource>();
-
-        // NDI Receiver finalization
-        if (GetComponent<NdiReceiver>() != null)
-            Destroy(GetComponent<NdiReceiver>());
-
-        if (name.StartsWith("UVC"))
-        {
-            // UVC (Webcam) source
-            source.SourceType = ImageSourceType.Webcam;
-            source.DeviceName = name.Substring(6);
-        }
-        else
-        {
-            // NDI source (with addition of the NDI Receiver component)
-            var recv = gameObject.AddComponent<NdiReceiver>();
-            recv.SetResources(_ndiResources);
-            recv.ndiName = name.Substring(6);
-            source.SourceType = ImageSourceType.Ndi;
-            source.NdiReceiver = recv;
-        }
+        source.SourceName = name.Substring(6);
+        source.SourceType = name.StartsWith("UVC") ?
+          ImageSourceType.Webcam : ImageSourceType.Ndi;
     }
 
     #endregion

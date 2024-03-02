@@ -2,6 +2,9 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Serialization;
 using UnityEngine.Video;
+#if KLAK_NDI_AVAILABLE
+using Klak.Ndi;
+#endif
 
 namespace Klak.TestTools {
 
@@ -11,6 +14,11 @@ partial class ImageSource
 
     [SerializeField, HideInInspector, FormerlySerializedAs("_shader")]
     Shader _generatorShader = null;
+
+    #if KLAK_NDI_AVAILABLE
+    [SerializeField, HideInInspector]
+    NdiResources _ndiResources;
+    #endif
 
     #endregion
 
@@ -91,7 +99,7 @@ partial class ImageSource
     WebCamTexture InitWebcam()
     {
         Application.RequestUserAuthorization(UserAuthorization.WebCam);
-        _webcam = new WebCamTexture(DeviceName, DeviceResolution.x,
+        _webcam = new WebCamTexture(SourceName, DeviceResolution.x,
                                     DeviceResolution.y, DeviceFrameRate);
         return _webcam;
     }
@@ -110,6 +118,20 @@ partial class ImageSource
         _videoPlayer.renderMode = VideoRenderMode.APIOnly;
         return _videoPlayer;
     }
+
+    #if KLAK_NDI_AVAILABLE
+    // NDI source
+    NdiReceiver _ndiReceiver;
+
+    NdiReceiver AttachNdiReceiver(string name)
+    {
+        if (string.IsNullOrEmpty(name)) return null;
+        _ndiReceiver = gameObject.AddComponent<NdiReceiver>();
+        _ndiReceiver.SetResources(_ndiResources);
+        _ndiReceiver.ndiName = name;
+        return _ndiReceiver;
+    }
+    #endif
 
     // Web texture (image from URL)
     UnityWebRequest _webTexture;
@@ -145,6 +167,14 @@ partial class ImageSource
             _videoPlayer = null;
         }
 
+        #if KLAK_NDI_AVAILABLE
+        if (_ndiReceiver != null)
+        {
+            Destroy(_ndiReceiver);
+            _ndiReceiver = null;
+        }
+        #endif
+
         if (_webTexture != null)
         {
             _webTexture.Dispose();
@@ -170,6 +200,12 @@ partial class ImageSource
         if (SourceType == ImageSourceType.Card)
             BlitToOutputWithCardGenerator(new Vector2(OutputBuffer.width,
                                                       OutputBuffer.height));
+
+        #if KLAK_NDI_AVAILABLE
+        // NDI source type
+        if (SourceType == ImageSourceType.Ndi)
+            AttachNdiReceiver(SourceName);
+        #endif
 
         // Texture URL source type
         if (SourceType == ImageSourceType.TextureUrl && IsSourceUrlGiven)
@@ -206,11 +242,11 @@ partial class ImageSource
             SourceCamera.Render();
         }
 
-#if KLAK_NDI_AVAILABLE
+        #if KLAK_NDI_AVAILABLE
         // NDI source update
-        if (SourceType == ImageSourceType.Ndi)
-            BlitToOutput(NdiReceiver?.texture);
-#endif
+        if (_ndiReceiver != null)
+            BlitToOutput(_ndiReceiver.texture);
+        #endif
 
         // Texture (URL) update
         if (_webTexture != null && _webTexture.isDone)

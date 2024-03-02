@@ -258,6 +258,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _generatorShader: {fileID: 4800000, guid: 3f7d8db4748f54c638a46cec0b0e61f8, type: 3}
+  _ndiResources: {fileID: 11400000, guid: 69304b86950074db7ba8caba75214004, type: 2}
   _sourceType: 5
   _outputResolution: {x: 1920, y: 1080}
   _outputDestination: {fileID: 8400000, guid: a5e2a14538434411bbcd9c4a94867bd9, type: 2}

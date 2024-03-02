@@ -2,6 +2,7 @@
     "name": "Klak.TestTools.Editor",
     "rootNamespace": "",
     "references": [
+        "GUID:b59f669f136310547b59ad72df53b42f",
         "GUID:9054d6e0d0c694d44a0d05e070ae54f9"
     ],
     "includePlatforms": [

@@ -1,5 +1,8 @@
 using UnityEditor;
 using UnityEngine;
+#if KLAK_NDI_AVAILABLE
+using Klak.Ndi;
+#endif
 
 namespace Klak.TestTools {
 
@@ -15,7 +18,7 @@ sealed class ImageSourceEditor : Editor
         public static Label Destination = "Destination";
         public static Label DeviceName = "Device Name";
         public static Label FrameRate = "Frame Rate";
-        public static Label NdiReceiver = "NDI Receiver";
+        public static Label NdiName = "NDI Name";
         public static Label Resolution = "Resolution";
         public static Label Select = "Select";
         public static Label URL = "URL";
@@ -35,12 +38,9 @@ sealed class ImageSourceEditor : Editor
     AutoProperty SourceTexture;
     AutoProperty _sourceVideo;
     AutoProperty SourceCamera;
-#if KLAK_NDI_AVAILABLE
-    AutoProperty NdiReceiver;
-#endif
 
     AutoProperty _sourceUrl;
-    AutoProperty _deviceName;
+    AutoProperty _sourceName;
     AutoProperty _deviceResolution;
     AutoProperty _deviceFrameRate;
 
@@ -51,18 +51,38 @@ sealed class ImageSourceEditor : Editor
     void ChangeWebcam(string name)
     {
         serializedObject.Update();
-        _deviceName.Target.stringValue = name;
+        _sourceName.Target.stringValue = name;
         serializedObject.ApplyModifiedProperties();
     }
 
-    void ShowDeviceSelector(Rect rect)
+    void ShowWebcamSelector(Rect rect)
     {
         var menu = new GenericMenu();
-        foreach (var device in WebCamTexture.devices)
-            menu.AddItem(new GUIContent(device.name), false,
-                         () => ChangeWebcam(device.name));
+        foreach (var dev in WebCamTexture.devices)
+            menu.AddItem(new GUIContent(dev.name), false, () => ChangeWebcam(dev.name));
         menu.DropDown(rect);
     }
+
+    #endregion
+
+    #region NDI helpers
+
+    #if KLAK_NDI_AVAILABLE
+    void ChangeNdi(string name)
+    {
+        serializedObject.Update();
+        _sourceName.Target.stringValue = name;
+        serializedObject.ApplyModifiedProperties();
+    }
+
+    void ShowNdiSelector(Rect rect)
+    {
+        var menu = new GenericMenu();
+        foreach (var name in NdiFinder.sourceNames)
+            menu.AddItem(new GUIContent(name), false, () => ChangeNdi(name));
+        menu.DropDown(rect);
+    }
+    #endif
 
     #endregion
 
@@ -89,10 +109,17 @@ sealed class ImageSourceEditor : Editor
         if (type == ImageSourceType.Camera)
             EditorGUILayout.PropertyField(SourceCamera, Labels.Camera);
 
-#if KLAK_NDI_AVAILABLE
+        #if KLAK_NDI_AVAILABLE
         if (type == ImageSourceType.Ndi)
-            EditorGUILayout.PropertyField(NdiReceiver, Labels.NdiReceiver);
-#endif
+        {
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.DelayedTextField(_sourceName, Labels.NdiName);
+            var rect = EditorGUILayout.GetControlRect(false, GUILayout.Width(60));
+            if (EditorGUI.DropdownButton(rect, Labels.Select, FocusType.Keyboard))
+                ShowNdiSelector(rect);
+            EditorGUILayout.EndHorizontal();
+        }
+        #endif
 
         if (type == ImageSourceType.TextureUrl ||
             type == ImageSourceType.VideoUrl)
@@ -101,10 +128,10 @@ sealed class ImageSourceEditor : Editor
         if (type == ImageSourceType.Webcam)
         {
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.PropertyField(_deviceName, Labels.DeviceName);
+            EditorGUILayout.DelayedTextField(_sourceName, Labels.DeviceName);
             var rect = EditorGUILayout.GetControlRect(false, GUILayout.Width(60));
             if (EditorGUI.DropdownButton(rect, Labels.Select, FocusType.Keyboard))
-                ShowDeviceSelector(rect);
+                ShowWebcamSelector(rect);
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.PropertyField(_deviceResolution, Labels.Resolution);
@@ -113,10 +140,10 @@ sealed class ImageSourceEditor : Editor
 
         EditorGUI.indentLevel--;
 
-#if !KLAK_NDI_AVAILABLE
+        #if !KLAK_NDI_AVAILABLE
         if (type == ImageSourceType.Ndi)
             EditorGUILayout.HelpBox(Labels.NdiError, MessageType.Error);
-#endif
+        #endif
 
         EditorGUILayout.PropertyField(_outputDestination, Labels.Destination);
 
