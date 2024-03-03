@@ -8,13 +8,6 @@ using UnityEngine;
 
 public sealed class SourceSelector : MonoBehaviour
 {
-    #region Editable property
-
-    [field:SerializeField]
-    public UIDocument TargetUI { get; set; }
-
-    #endregion
-
     #region Data source accessor for UI Toolkit
 
     [CreateProperty]
@@ -24,8 +17,10 @@ public sealed class SourceSelector : MonoBehaviour
 
     #region UI methods
 
+    VisualElement UIRoot => GetComponent<UIDocument>().rootVisualElement;
+
     void ToggleUI()
-      => TargetUI.rootVisualElement.Q("SourceSelector").visible ^= true;
+      => UIRoot.Q("Selector").visible ^= true;
 
     void UpdateOptions()
       => SourceList =
@@ -48,12 +43,11 @@ public sealed class SourceSelector : MonoBehaviour
     void Start()
     {
         // UI root: Make it clickable and set this as a data source.
-        var root = TargetUI.rootVisualElement;
-        root.AddManipulator(new Clickable(ToggleUI));
-        root.dataSource = this;
+        UIRoot.AddManipulator(new Clickable(ToggleUI));
+        UIRoot.dataSource = this;
 
         // Dropdown selector: Hook the callbacks up and intially hide the UI.
-        var list = root.Q<DropdownField>("SourceDropdown");
+        var list = UIRoot.Q<DropdownField>("Dropdown");
         list.RegisterValueChangedCallback(evt => SelectSource(evt.newValue));
         list.RegisterCallback<FocusEvent>(_ => UpdateOptions());
     }

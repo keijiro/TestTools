@@ -221,10 +221,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 755876061}
-  - component: {fileID: 755876062}
+  - component: {fileID: 755876064}
   - component: {fileID: 755876063}
+  - component: {fileID: 755876062}
   m_Layer: 0
-  m_Name: Test
+  m_Name: Image Source
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -265,9 +266,8 @@ MonoBehaviour:
   <SourceTexture>k__BackingField: {fileID: 0}
   _sourceVideo: {fileID: 0}
   <SourceCamera>k__BackingField: {fileID: 1100264432}
-  <NdiReceiver>k__BackingField: {fileID: 0}
   _sourceUrl: https://upload.wikimedia.org/wikipedia/commons/1/1c/Homme_de_vitruve.jpg
-  _deviceName: 
+  _sourceName: 
   _deviceResolution: {x: 1920, y: 1080}
   _deviceFrameRate: 30
 --- !u!114 &755876063
@@ -282,8 +282,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31e4b60789ac448eeb715410e64e5d5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <TargetUI>k__BackingField: {fileID: 1160323001}
-  _ndiResources: {fileID: 11400000, guid: 69304b86950074db7ba8caba75214004, type: 2}
+--- !u!114 &755876064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 755876059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PanelSettings: {fileID: 11400000, guid: 6f7594dcc91624c6f9764dc2c51c2fce, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: ef2fa93671aec48ec8f7a6e0528edc4f, type: 3}
+  m_SortingOrder: 0
 --- !u!1 &889026468
 GameObject:
   m_ObjectHideFlags: 0
@@ -537,59 +551,10 @@ Transform:
   - {fileID: 700306551}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1160323000
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1160323002}
-  - component: {fileID: 1160323001}
-  m_Layer: 5
-  m_Name: UIDocument
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1160323001
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1160323000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_PanelSettings: {fileID: 11400000, guid: 6f7594dcc91624c6f9764dc2c51c2fce, type: 2}
-  m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 9197481963319205126, guid: ef2fa93671aec48ec8f7a6e0528edc4f, type: 3}
-  m_SortingOrder: 0
---- !u!4 &1160323002
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1160323000}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1160323002}
+  - {fileID: 755876061}
   - {fileID: 889026470}
   - {fileID: 1100264433}
-  - {fileID: 755876061}

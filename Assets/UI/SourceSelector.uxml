@@ -2,9 +2,9 @@
     <ui:VisualElement style="flex-grow: 1;">
         <GallantGames.UI.AspectRatioPanel aspect-ratio-x="10" aspect-ratio-y="10" style="background-image: url(&quot;project://database/Assets/Test/Buffer.renderTexture?fileID=8400000&amp;guid=a5e2a14538434411bbcd9c4a94867bd9&amp;type=2#Buffer&quot;); top: 66px; right: 128px;" />
     </ui:VisualElement>
-    <ui:VisualElement name="SourceSelector" style="flex-grow: 1; position: absolute; top: 3%; left: 3%; flex-direction: row;">
-        <ui:Label text="Source" style="align-self: center; color: rgb(238, 238, 238);" />
-        <ui:DropdownField choices="No source available" name="SourceDropdown" style="width: 500px;">
+    <ui:VisualElement name="Selector" style="flex-direction: row; align-items: center; position: absolute; top: 30px; left: 30px;">
+        <ui:Label text="Source" style="color: rgb(204, 204, 204);" />
+        <ui:DropdownField name="Dropdown" style="width: 500px;">
             <Bindings>
                 <ui:DataBinding property="choices" data-source-path="SourceList" binding-mode="ToTarget" />
             </Bindings>
