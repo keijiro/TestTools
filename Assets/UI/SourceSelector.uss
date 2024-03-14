@@ -1,0 +1,8 @@
+.source-selector {
+    font-size: 22px;
+}
+
+.unity-base-field__label {
+    color: rgb(255, 255, 255);
+    -unity-text-align: middle-left;
+}

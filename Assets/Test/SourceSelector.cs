@@ -20,7 +20,7 @@ public sealed class SourceSelector : MonoBehaviour
     VisualElement UIRoot => GetComponent<UIDocument>().rootVisualElement;
 
     void ToggleUI()
-      => UIRoot.Q("Selector").visible ^= true;
+      => UIRoot.Q("source-selector").visible ^= true;
 
     void UpdateOptions()
       => SourceList =
@@ -47,7 +47,7 @@ public sealed class SourceSelector : MonoBehaviour
         UIRoot.dataSource = this;
 
         // Dropdown selector: Hook the callbacks up and intially hide the UI.
-        var list = UIRoot.Q<DropdownField>("Dropdown");
+        var list = UIRoot.Q<DropdownField>("source-selector");
         list.RegisterValueChangedCallback(evt => SelectSource(evt.newValue));
         list.RegisterCallback<FocusEvent>(_ => UpdateOptions());
     }
