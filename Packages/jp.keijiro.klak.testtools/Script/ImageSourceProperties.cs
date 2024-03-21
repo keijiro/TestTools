@@ -83,6 +83,7 @@ partial class ImageSource
     #region Runtime property
 
     public Texture AsTexture => OutputBuffer;
+    public RenderTexture AsRenderTexture => OutputBuffer;
 
     #endregion
 }
