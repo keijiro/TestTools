@@ -1,8 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <Style src="project://database/Assets/SourceSelector.uss?fileID=7433441132597879392&amp;guid=5bdb411ba10ef458bb351fd78d5257fa&amp;type=3#SourceSelector" />
-    <ui:VisualElement name="preveiw-container" style="flex-grow: 1;">
-        <GallantGames.UI.AspectRatioPanel aspect-ratio-x="10" aspect-ratio-y="10" name="preview" style="background-image: url(&quot;project://database/Assets/Test/Buffer.renderTexture?fileID=8400000&amp;guid=a5e2a14538434411bbcd9c4a94867bd9&amp;type=2#Buffer&quot;); top: 66px; right: 128px;" />
-    </ui:VisualElement>
+    <Style src="project://database/Assets/UI/SourceSelector.uss?fileID=7433441132597879392&amp;guid=5bdb411ba10ef458bb351fd78d5257fa&amp;type=3#SourceSelector" />
+    <ui:VisualElement name="preview" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url(&quot;project://database/Assets/Test/Buffer.renderTexture?fileID=8400000&amp;guid=a5e2a14538434411bbcd9c4a94867bd9&amp;type=2#Buffer&quot;); -unity-background-scale-mode: scale-to-fit;" />
     <ui:DropdownField name="source-selector" label="Source Device" class="source-selector" style="position: absolute; top: 35px; left: 35px; right: 35px;">
         <Bindings>
             <ui:DataBinding property="choices" data-source-path="SourceList" binding-mode="ToTarget" />
