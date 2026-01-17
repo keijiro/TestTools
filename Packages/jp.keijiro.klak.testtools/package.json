@@ -1,4 +1,9 @@
 {
+  "name": "jp.keijiro.klak.testtools",
+  "version": "3.1.0",
+  "displayName": "Test Tools",
+  "description": "A small collection of utility scripts for testing.",
+  "unity": "2022.3",
   "author": "Keijiro Takahashi",
   "dependencies": {
     "com.unity.modules.audio": "1.0.0",
@@ -6,13 +11,9 @@
     "com.unity.modules.unitywebrequesttexture": "1.0.0",
     "com.unity.modules.video": "1.0.0"
   },
-  "description": "A small collection of utility scripts for testing.",
-  "displayName": "Test Tools",
-  "keywords": [ "unity" ],
+  "changelogUrl": "https://github.com/keijiro/TestTools/blob/master/CHANGELOG.md",
+  "documentationUrl": "https://github.com/keijiro/TestTools",
+  "licensesUrl": "https://github.com/keijiro/TestTools/blob/master/LICENSE",
   "license": "Unlicense",
-  "name": "jp.keijiro.klak.testtools",
-  "repository": "github:keijiro/TestTools",
-  "unity": "2022.3",
-  "unityRelease": "0f1",
-  "version": "3.1.0"
+  "_upm": { "changelog": "" }
 }
