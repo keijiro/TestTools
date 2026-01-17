@@ -1,6 +1,6 @@
 {
   "name": "jp.keijiro.klak.testtools",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "displayName": "Test Tools",
   "description": "A small collection of utility scripts for testing.",
   "unity": "2022.3",
@@ -15,5 +15,5 @@
   "documentationUrl": "https://github.com/keijiro/TestTools",
   "licensesUrl": "https://github.com/keijiro/TestTools/blob/master/LICENSE",
   "license": "Unlicense",
-  "_upm": { "changelog": "" }
+  "_upm": { "changelog": "<b>Added</b><br>- Added signing for Unity 6.3." }
 }
